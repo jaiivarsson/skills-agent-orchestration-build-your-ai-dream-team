@@ -1,0 +1,39 @@
+{
+  "projects": [
+    {
+      "name": "Nebula Analytics",
+      "owner": "Priya Shah",
+      "status": "Active",
+      "recentActivity": "Updated API docs 2 days ago",
+      "priority": "High"
+    },
+    {
+      "name": "Orion Onboarding Flow",
+      "owner": "Marcus Lee",
+      "status": "At Risk",
+      "recentActivity": "Merged auth fix 4 hours ago",
+      "priority": "High"
+    },
+    {
+      "name": "Comet Notifications",
+      "owner": "Ana Torres",
+      "status": "Blocked",
+      "recentActivity": "Waiting on design review since Monday",
+      "priority": "Medium"
+    },
+    {
+      "name": "Aurora Reporting Suite",
+      "owner": "Jamal Whitfield",
+      "status": "Completed",
+      "recentActivity": "Shipped v2.0 release yesterday",
+      "priority": "Low"
+    },
+    {
+      "name": "Pulsar Mobile App",
+      "owner": "Sofia Nguyen",
+      "status": "Active",
+      "recentActivity": "Deployed beta build 1 day ago",
+      "priority": "Medium"
+    }
+  ]
+}

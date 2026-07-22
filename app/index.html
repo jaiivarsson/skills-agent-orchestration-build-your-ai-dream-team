@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Project Pulse</h1>
+  </header>
+
+  <main class="dashboard" id="dashboard">
+    <p>Loading projects&hellip;</p>
+  </main>
+
+  <script>
+    async function loadProjects() {
+      const dashboard = document.getElementById('dashboard');
+
+      try {
+        const response = await fetch('project-data.json');
+        if (!response.ok) {
+          throw new Error('Network response was not ok (' + response.status + ')');
+        }
+
+        const data = await response.json();
+        const projects = Array.isArray(data.projects) ? data.projects : [];
+
+        if (projects.length === 0) {
+          dashboard.innerHTML = '<p class="empty-state">No projects to display</p>';
+          return;
+        }
+
+        dashboard.innerHTML = '';
+        projects.forEach(function (project) {
+          dashboard.appendChild(createProjectCard(project));
+        });
+      } catch (error) {
+        dashboard.innerHTML =
+          '<p class="error-state">Unable to load project data. Make sure the dashboard is running via ' +
+          'the "Run Project Pulse Dashboard" launch configuration (fetch requires an HTTP server, not file://). ' +
+          'Details: ' + error.message + '</p>';
+      }
+    }
+
+    function createProjectCard(project) {
+      const name = project.name || 'Unknown';
+      const owner = project.owner || 'Unknown';
+      const status = project.status || 'Unknown';
+      const recentActivity = project.recentActivity || 'No recent activity';
+      const priority = project.priority || 'Unknown';
+
+      const card = document.createElement('article');
+      card.className = 'project-card';
+
+      card.innerHTML =
+        '<h2 class="project-name">' + escapeHtml(name) + '</h2>' +
+        '<div class="project-owner"><span class="label">Owner:</span> <span class="value">' + escapeHtml(owner) + '</span></div>' +
+        '<div class="project-status" data-status="' + escapeHtml(status) + '"><span class="label">Status:</span> <span class="value">' + escapeHtml(status) + '</span></div>' +
+        '<div class="project-priority" data-priority="' + escapeHtml(priority) + '"><span class="label">Priority:</span> <span class="value">' + escapeHtml(priority) + '</span></div>' +
+        '<div class="project-activity"><span class="label">Recent activity:</span> <span class="value">' + escapeHtml(recentActivity) + '</span></div>';
+
+      return card;
+    }
+
+    function escapeHtml(value) {
+      const div = document.createElement('div');
+      div.textContent = String(value);
+      return div.innerHTML;
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>

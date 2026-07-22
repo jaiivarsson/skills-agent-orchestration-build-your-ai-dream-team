@@ -1,0 +1,327 @@
+/* =========================================================
+   Project Pulse — Dashboard Styles
+   Owned by: Designer
+   Scope: visual layer only. Selectors below match the fixed
+   markup contract from app/index.html (Coder-owned):
+     .dashboard, .project-card, .project-name, .project-owner,
+     .project-status, .project-priority, .project-activity,
+     .label, .value, .empty-state, .error-state
+   ========================================================= */
+
+:root {
+  --color-bg: #f3f5f9;
+  --color-surface: #ffffff;
+  --color-border: #e1e5ee;
+  --color-text: #1f2733;
+  --color-text-muted: #5b6472;
+  --color-heading: #10192b;
+  --color-accent: #3454d1;
+
+  --color-status-active-bg: #d5f2df;
+  --color-status-active-text: #0b5d2e;
+  --color-status-atrisk-bg: #fff0c2;
+  --color-status-atrisk-text: #7a5200;
+  --color-status-blocked-bg: #fdd9d9;
+  --color-status-blocked-text: #8a1c1c;
+  --color-status-completed-bg: #dbe6ff;
+  --color-status-completed-text: #1c3a8a;
+  --color-status-default-bg: #e7e9ee;
+  --color-status-default-text: #3a4150;
+
+  --color-priority-high: #c0223a;
+  --color-priority-medium: #b8790a;
+  --color-priority-low: #1f7a4d;
+  --color-priority-default: #6b7280;
+
+  --radius-md: 10px;
+  --radius-pill: 999px;
+  --shadow-card: 0 2px 6px rgba(16, 25, 43, 0.08), 0 1px 2px rgba(16, 25, 43, 0.06);
+  --shadow-card-hover: 0 8px 20px rgba(16, 25, 43, 0.14), 0 2px 6px rgba(16, 25, 43, 0.08);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-5) var(--space-6);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  letter-spacing: -0.01em;
+}
+
+/* -----------------------------------------------------------
+   .dashboard — page/grid container
+   ----------------------------------------------------------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6);
+  align-items: start;
+}
+
+/* Loading / plain text paragraph shown before JS resolves */
+.dashboard > p {
+  grid-column: 1 / -1;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  text-align: center;
+  padding: var(--space-5);
+}
+
+/* -----------------------------------------------------------
+   .project-card — individual project card
+   ----------------------------------------------------------- */
+.project-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 6px solid var(--color-priority-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0; /* required so overflow/ellipsis children can shrink in a grid/flex item */
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* -----------------------------------------------------------
+   Long text handling (names/owners)
+   ----------------------------------------------------------- */
+.project-name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.project-owner,
+.project-status,
+.project-priority,
+.project-activity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: 0.92rem;
+  min-width: 0;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.value {
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.project-owner .value,
+.project-activity .value {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* -----------------------------------------------------------
+   Status badge treatment (.project-status .value)
+   Pill shape, distinct background per data-status value.
+   The wrapper (.project-status) carries data-status, set by
+   Coder in the markup; color is applied to the inner .value
+   pill so the shape/spacing rules above remain untouched.
+   ----------------------------------------------------------- */
+.project-status .value {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-status-default-bg);
+  color: var(--color-status-default-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.project-status[data-status="Active"] .value {
+  background: var(--color-status-active-bg);
+  color: var(--color-status-active-text);
+  border-color: rgba(11, 93, 46, 0.18);
+}
+
+.project-status[data-status="At Risk"] .value {
+  background: var(--color-status-atrisk-bg);
+  color: var(--color-status-atrisk-text);
+  border-color: rgba(122, 82, 0, 0.18);
+}
+
+.project-status[data-status="Blocked"] .value {
+  background: var(--color-status-blocked-bg);
+  color: var(--color-status-blocked-text);
+  border-color: rgba(138, 28, 28, 0.18);
+}
+
+.project-status[data-status="Completed"] .value {
+  background: var(--color-status-completed-bg);
+  color: var(--color-status-completed-text);
+  border-color: rgba(28, 58, 138, 0.18);
+}
+
+/* -----------------------------------------------------------
+   Priority treatment — visually distinct from status:
+   a small square-cornered tag rather than a pill. Colors are
+   wired to data-priority on the .project-priority wrapper so
+   each priority level reads at a glance.
+   ----------------------------------------------------------- */
+.project-priority .value {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 4px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-priority-default);
+  color: var(--color-priority-default);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.project-priority[data-priority="High"] .value {
+  border-color: var(--color-priority-high);
+  color: var(--color-priority-high);
+  background: #fdecec;
+}
+
+.project-priority[data-priority="Medium"] .value {
+  border-color: var(--color-priority-medium);
+  color: var(--color-priority-medium);
+  background: #fdf3e0;
+}
+
+.project-priority[data-priority="Low"] .value {
+  border-color: var(--color-priority-low);
+  color: var(--color-priority-low);
+  background: #e6f5ec;
+}
+
+/* Card left-border accent picks up the priority color so
+   urgency is visible even at a glance/scan, not just on the tag. */
+.project-card:has(.project-priority[data-priority="High"]) {
+  border-left-color: var(--color-priority-high);
+}
+
+.project-card:has(.project-priority[data-priority="Medium"]) {
+  border-left-color: var(--color-priority-medium);
+}
+
+.project-card:has(.project-priority[data-priority="Low"]) {
+  border-left-color: var(--color-priority-low);
+}
+
+.project-activity .value {
+  color: var(--color-text-muted);
+}
+
+/* -----------------------------------------------------------
+   .empty-state / .error-state
+   ----------------------------------------------------------- */
+.empty-state,
+.error-state {
+  grid-column: 1 / -1;
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.6;
+  box-shadow: var(--shadow-card);
+}
+
+.empty-state {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.error-state {
+  background: #fdecec;
+  border: 1px solid #f3b3b3;
+  color: #7a1f1f;
+}
+
+/* -----------------------------------------------------------
+   Responsive behavior
+   ----------------------------------------------------------- */
+@media (max-width: 600px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  header {
+    padding: var(--space-4);
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-card {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .label {
+    font-size: 0.75rem;
+  }
+}
